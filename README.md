@@ -289,45 +289,212 @@ function counter() {
 
 function spam() {
   alert("😂");
+  
+<html>
+<head>
+  <title>Game Hub</title>
+
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial;
+      background: #0f172a;
+      color: white;
+    }
+
+    header {
+      background: #020617;
+      padding: 15px;
+      text-align: center;
+      font-size: 22px;
+      font-weight: bold;
+      box-shadow: 0 0 10px #0f0;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+      gap: 15px;
+      padding: 20px;
+    }
+
+    .card {
+      background: #1e293b;
+      border-radius: 12px;
+      padding: 15px;
+      text-align: center;
+      cursor: pointer;
+      transition: 0.2s;
+      box-shadow: 0 0 10px #000;
+    }
+
+    .card:hover {
+      transform: scale(1.05);
+      background: #334155;
+      box-shadow: 0 0 15px #0f0;
+    }
+
+    .icon {
+      font-size: 40px;
+    }
+
+    canvas {
+      display: block;
+      margin: 20px auto;
+      border: 2px solid #0f0;
+      border-radius: 10px;
+      background: black;
+    }
+
+    #backBtn {
+      display: none;
+      margin: 10px;
+      padding: 10px;
+      background: red;
+      border: none;
+      color: white;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+
+<body>
+
+<header>🎮 Game Hub</header>
+
+<button id="backBtn" onclick="goHome()">⬅ Back</button>
+
+<div id="menu" class="grid">
+
+  <div class="card" onclick="startSnake()">
+    <div class="icon">🐍</div>
+    <p>Snake</p>
+  </div>
+
+  <div class="card" onclick="startFlappy()">
+    <div class="icon">🐤</div>
+    <p>Flappy</p>
+  </div>
+
+  <div class="card" onclick="startPong()">
+    <div class="icon">🏓</div>
+    <p>Pong</p>
+  </div>
+
+  <div class="card" onclick="startBreakout()">
+    <div class="icon">🧱</div>
+    <p>Breakout</p>
+  </div>
+
+</div>
+
+<canvas id="gameCanvas" width="500" height="400"></canvas>
+
+<script>
+const canvas = document.getElementById("gameCanvas");
+const ctx = canvas.getContext("2d");
+let gameLoop;
+
+function showGame() {
+  document.getElementById("menu").style.display = "none";
+  document.getElementById("backBtn").style.display = "inline-block";
 }
-</script>
 
-</body>
-</html>
-🔥 Now your site feels like:
+function goHome() {
+  clearInterval(gameLoop);
+  document.getElementById("menu").style.display = "grid";
+  document.getElementById("backBtn").style.display = "none";
+  ctx.clearRect(0,0,500,400);
+}
 
-🎮 A real game platform
+// 🐍 Snake
+function startSnake() {
+  showGame();
+  let snake=[{x:200,y:200}], dx=20, dy=0;
+  let food={x:100,y:100};
+  document.onkeydown=e=>{
+    if(e.key==="ArrowUp"){dx=0;dy=-20;}
+    if(e.key==="ArrowDown"){dx=0;dy=20;}
+    if(e.key==="ArrowLeft"){dx=-20;dy=0;}
+    if(e.key==="ArrowRight"){dx=20;dy=0;}
+  };
+  gameLoop=setInterval(()=>{
+    ctx.fillStyle="black"; ctx.fillRect(0,0,500,400);
+    let head={x:snake[0].x+dx,y:snake[0].y+dy};
+    snake.unshift(head);
+    if(head.x===food.x&&head.y===food.y){
+      food={x:Math.floor(Math.random()*25)*20,y:Math.floor(Math.random()*20)*20};
+    } else snake.pop();
+    ctx.fillStyle="lime"; snake.forEach(s=>ctx.fillRect(s.x,s.y,20,20));
+    ctx.fillStyle="red"; ctx.fillRect(food.x,food.y,20,20);
+  },100);
+}
 
-🧩 Grid layout like actual game sites
+// 🐤 Flappy
+function startFlappy() {
+  showGame();
+  let y=200, v=0;
+  document.onclick=()=>v=-8;
+  gameLoop=setInterval(()=>{
+    ctx.fillStyle="skyblue"; ctx.fillRect(0,0,500,400);
+    v+=0.5; y+=v;
+    ctx.fillStyle="yellow"; ctx.fillRect(50,y,20,20);
+    if(y>380){clearInterval(gameLoop); alert("Game Over");}
+  },30);
+}
 
-⚡ Smooth hover effects
+// 🏓 Pong
+function startPong() {
+  showGame();
+  let ball={x:250,y:200,dx:4,dy:4};
+  let paddle={x:200};
+  document.onmousemove=e=>paddle.x=e.clientX-50;
+  gameLoop=setInterval(()=>{
+    ctx.fillStyle="black"; ctx.fillRect(0,0,500,400);
+    ball.x+=ball.dx; ball.y+=ball.dy;
+    if(ball.x<0||ball.x>500) ball.dx*=-1;
+    if(ball.y<0) ball.dy*=-1;
+    if(ball.y>380 && ball.x>paddle.x && ball.x<paddle.x+100) ball.dy*=-1;
+    if(ball.y>400){clearInterval(gameLoop); alert("Game Over");}
+    ctx.fillStyle="lime"; ctx.beginPath();
+    ctx.arc(ball.x,ball.y,10,0,6.28); ctx.fill();
+    ctx.fillStyle="cyan"; ctx.fillRect(paddle.x,390,100,10);
+  },20);
+}
 
-🕹️ 10 playable games
-
-💻 Clean + professional look
-
-🔗 Your link (example)
-
-After publishing on GitHub Pages:
-
-https://yourusername.github.io/games
-😈 Want it EVEN CRAZIER?
-
-I can upgrade you to:
-
-🐍 Real Snake game
-
-🐤 Flappy Bird clone
-
-🧱 Breakout / Pong
-
-🎨 Neon glowing “hacker” UI
-
-🎮 Game icons like real sites
-
-Just say:
-👉 “add snake and flappy bird”
-    '<iframe src="' + url + '"></iframe>';
+// 🧱 Breakout
+function startBreakout() {
+  showGame();
+  let ball={x:250,y:200,dx:3,dy:-3};
+  let paddle={x:200};
+  let bricks=[];
+  for(let i=0;i<5;i++){
+    for(let j=0;j<8;j++){
+      bricks.push({x:j*60+10,y:i*20+30,alive:true});
+    }
+  }
+  document.onmousemove=e=>paddle.x=e.clientX-50;
+  gameLoop=setInterval(()=>{
+    ctx.fillStyle="black"; ctx.fillRect(0,0,500,400);
+    bricks.forEach(b=>{
+      if(b.alive){
+        ctx.fillStyle="orange";
+        ctx.fillRect(b.x,b.y,50,15);
+        if(ball.x>b.x && ball.x<b.x+50 && ball.y>b.y && ball.y<b.y+15){
+          b.alive=false; ball.dy*=-1;
+        }
+      }
+    });
+    ball.x+=ball.dx; ball.y+=ball.dy;
+    if(ball.x<0||ball.x>500) ball.dx*=-1;
+    if(ball.y<0) ball.dy*=-1;
+    if(ball.y>400){clearInterval(gameLoop); alert("Game Over");}
+    if(ball.y>380 && ball.x>paddle.x && ball.x<paddle.x+100) ball.dy*=-1;
+    ctx.fillStyle="lime"; ctx.beginPath();
+    ctx.arc(ball.x,ball.y,10,0,6.28); ctx.fill();
+    ctx.fillStyle="cyan"; ctx.fillRect(paddle.x,390,100,10);
+  },20);
 }
 </script>
 
