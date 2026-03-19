@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Game Hub</title>
+</head>
+
+<body style="text-align:center; font-family:sans-serif;">
+
+<h1>🎮 Game Hub</h1>
+
+<button onclick="clicker()">Clicker Game</button>
+<button onclick="guess()">Guess Game</button>
+<button onclick="coin()">Coin Flip</button>
+
+<div id="game"></div>
+
+<script>
+function clicker() {
+  let score = 0;
+  document.getElementById("game").innerHTML =
+    '<button onclick="score++">Click</button><h2 id="s">0</h2>';
+  setInterval(()=>{s.innerText=score},100);
+}
+
+function guess() {
+  let n = Math.floor(Math.random()*5)+1;
+  let g = prompt("Guess 1-5");
+  alert(g == n ? "Win!" : "Lose! It was " + n);
+}
+
+function coin() {
+  alert(Math.random() < 0.5 ? "Heads" : "Tails");
+}
+</script>
+
+</body>
+</html>
